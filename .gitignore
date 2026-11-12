@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.pyc
+# in-flight downloads (a finished chunk is renamed to .parquet)
+*.part
