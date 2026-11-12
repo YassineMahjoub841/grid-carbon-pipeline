@@ -215,7 +215,37 @@ intensity rose. (Simple slot averages are not consumption-weighted; Phase 2 deci
 | `stockage_batterie` / `destockage_batterie` | `battery_charge_mw` / `battery_discharge_mw` | | `ech_comm_<pays>` | `commercial_exchange_<country>_mw` |
 | `date`, `heure` | `local_date_text`, `local_time_text` (used only to drop DST phantoms) | | `perimetre` | dropped (always `France`) |
 
-## 10. Open questions for later phases (not decided here)
+## 10. Backfill sanity check (2026-11-13)
+
+Run on `data/raw/eco2mix-national-cons-def/extracted_date=2026-11-12/` (15 files, ~21 MB) with DuckDB, `TimeZone='UTC'`.
+
+| Check | Result |
+|---|---|
+| sha256 + row count vs manifest | 15/15 match; 514,272 rows total = API `total_count` |
+| Schema across files | Identical in all 15 files (no type drift between chunks) |
+| Lineage columns | `_source_dataset`, `_extracted_at` non-null on every row |
+| Chunk boundaries | No row outside its UTC year. The 2025 file holds 4 `consolidées` rows: 2025-12-31 23:xx UTC = 2026-01-01 local. Expected |
+| `date`/`heure` vs `date_heure` in Paris time | 0 mismatches outside DST phantoms |
+| Duplicate `date_heure` | 60 timestamps = 15 spring-forward Sundays × 4. All have a phantom `02:xx` row |
+| Gaps in 30-min actuals | 14 one-hour holes, all on October DST Sundays (2012–2025), + 1 at 2026-01-01 00:00 local. Nothing else |
+| Actuals at :15/:45 | 0 (commercial exchanges only, 19,104 rows since 2024-06) |
+| `perimetre`, forecasts | Always `France`; forecasts never null |
+| Annual totals | Identical to the Phase 0 API aggregation (2022 net exchange +14.8 TWh) |
+| Ranges | consumption 29.1–102.1 GW, CO2 5–141 g/kWh, nuclear 19.2–61.7 GW, `pompage` −4,086…−1 |
+
+Anomalies found, none blocking:
+- **Small negative production.** `solaire` < 0 on 37,669 rows (2013–2020, almost all −1/−2 MW at night, min −23).
+  `charbon` < 0 on 14,680 rows (2012–2020, min −133 MW). Most likely plants drawing auxiliary power while idle
+  (net output, as published). Keep the values; a "production ≥ 0" test must allow a small negative tolerance (e.g. ≥ −200 MW).
+- **Oil sub-components** don't add up in Nov–Dec 2018 (827 slots, ≤ 33 MW) and on 7 slots in 2019 (≤ 217 MW).
+  Irrelevant to us: we use the parent `fioul`.
+- **`"ND"` also in `ech_comm_allemagne_belgique`**: 28 rows, on DST days 2012–2015.
+- **The energy balance gets worse from 2021.** The mean |residual| is ~1 MW in 2012–2020, ~70 MW in 2021–2025, 94 MW in 2026.
+  The largest residuals (≈ −530 MW) are at summer midday in 2026, when production exceeds consumption.
+  *Hypothesis:* battery charging, which grows from 2021 and has no column in cons-def. Not verified.
+  The worst 2026 row is off by 1.2%, so a balance test needs **~2% tolerance** (0 rows exceed 2%), not 1%.
+
+## 11. Open questions for later phases (not decided here)
 
 1. **Grain of `fct_grid_interval`:** history is 30-min, tr is 15-min. Options: 30-min grain
    everywhere (aggregate tr), or 15-min grain with history only on :00/:30. We also don't know
