@@ -1,0 +1,128 @@
+{
+  "dataset": "eco2mix-national-cons-def",
+  "status": "complete",
+  "chunks": {
+    "2012": {
+      "file": "cons_def_2012.parquet",
+      "where": "date_heure < date'2013-01-01T00:00:00Z'",
+      "rows": 35140,
+      "extracted_at": "2026-11-12T23:21:40.824673+00:00",
+      "sha256": "a589588ecc1996dcc3368dd609603f3a9fd7bfbe3cbdde43c8655605f6308da0"
+    },
+    "2013": {
+      "file": "cons_def_2013.parquet",
+      "where": "date_heure >= date'2013-01-01T00:00:00Z' and date_heure < date'2014-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:21:46.435038+00:00",
+      "sha256": "5a28903092af269243d5261e45808b5db10848b01cc39d8df094e453081e204e"
+    },
+    "2014": {
+      "file": "cons_def_2014.parquet",
+      "where": "date_heure >= date'2014-01-01T00:00:00Z' and date_heure < date'2015-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:21:52.675987+00:00",
+      "sha256": "44f627769ed4efae9ea642956448f4cf01fcc037f3c3a46a71d02403abfd3aeb"
+    },
+    "2015": {
+      "file": "cons_def_2015.parquet",
+      "where": "date_heure >= date'2015-01-01T00:00:00Z' and date_heure < date'2016-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:21:58.501357+00:00",
+      "sha256": "e2add63dc7bd40e79adc52e4a70157a26071f1993936fbceee0a32857493e9e4"
+    },
+    "2016": {
+      "file": "cons_def_2016.parquet",
+      "where": "date_heure >= date'2016-01-01T00:00:00Z' and date_heure < date'2017-01-01T00:00:00Z'",
+      "rows": 35136,
+      "extracted_at": "2026-11-12T23:22:04.558150+00:00",
+      "sha256": "16826df9a89b9e3cbb09de1295da1199a8347ecd07138815308591452020e5c5"
+    },
+    "2017": {
+      "file": "cons_def_2017.parquet",
+      "where": "date_heure >= date'2017-01-01T00:00:00Z' and date_heure < date'2018-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:10.517086+00:00",
+      "sha256": "6b274e9aca3455a960045a695bb5ab90a92da2da9a0123aa36362802a41cdc64"
+    },
+    "2018": {
+      "file": "cons_def_2018.parquet",
+      "where": "date_heure >= date'2018-01-01T00:00:00Z' and date_heure < date'2019-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:16.297791+00:00",
+      "sha256": "d643119762cab94fc8adb271d4181bdd20db23fe323ee81535856fd15a5be19e"
+    },
+    "2019": {
+      "file": "cons_def_2019.parquet",
+      "where": "date_heure >= date'2019-01-01T00:00:00Z' and date_heure < date'2020-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:22.255745+00:00",
+      "sha256": "53f9caac35e88cccb824c9b2b981104fda299b09efa7fd34083607cbab58c041"
+    },
+    "2020": {
+      "file": "cons_def_2020.parquet",
+      "where": "date_heure >= date'2020-01-01T00:00:00Z' and date_heure < date'2021-01-01T00:00:00Z'",
+      "rows": 35136,
+      "extracted_at": "2026-11-12T23:22:27.972975+00:00",
+      "sha256": "a0c7e9e96691aad2704170bfb8b6c7244fe3cdbe3a7abde2ca0dd23860308fce"
+    },
+    "2021": {
+      "file": "cons_def_2021.parquet",
+      "where": "date_heure >= date'2021-01-01T00:00:00Z' and date_heure < date'2022-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:33.775767+00:00",
+      "sha256": "afe9293146d57435c5d50c21a83ca89b506500949e00f5a6e635155c50b61985"
+    },
+    "2022": {
+      "file": "cons_def_2022.parquet",
+      "where": "date_heure >= date'2022-01-01T00:00:00Z' and date_heure < date'2023-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:39.563782+00:00",
+      "sha256": "147ebd07efb76710db9440d71a165506077e71863edbb1af28cc38393039184b"
+    },
+    "2023": {
+      "file": "cons_def_2023.parquet",
+      "where": "date_heure >= date'2023-01-01T00:00:00Z' and date_heure < date'2024-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:45.483406+00:00",
+      "sha256": "6c3170f7bba362ed380b1bc91733004f0afd607656d3cecdff2df7d693f9d70c"
+    },
+    "2024": {
+      "file": "cons_def_2024.parquet",
+      "where": "date_heure >= date'2024-01-01T00:00:00Z' and date_heure < date'2025-01-01T00:00:00Z'",
+      "rows": 35136,
+      "extracted_at": "2026-11-12T23:22:51.180292+00:00",
+      "sha256": "7e160838298101f4e9a0adbe97fc5911fe9b9bfe61e0f2b5e7c42a2cc9a822f2"
+    },
+    "2025": {
+      "file": "cons_def_2025.parquet",
+      "where": "date_heure >= date'2025-01-01T00:00:00Z' and date_heure < date'2026-01-01T00:00:00Z'",
+      "rows": 35040,
+      "extracted_at": "2026-11-12T23:22:56.830280+00:00",
+      "sha256": "5d29a9beb49a2e11e5ffec62bfd543a472aaee91f361d932ad64014618ce2c8f"
+    },
+    "2026": {
+      "file": "cons_def_2026.parquet",
+      "where": "date_heure >= date'2026-01-01T00:00:00Z'",
+      "rows": 23324,
+      "extracted_at": "2026-11-12T23:23:02.833765+00:00",
+      "sha256": "00d3e9d0507a8cf2e0ae89c9a1b75d160d4c40a88da6a0840897bb815e290a2d"
+    }
+  },
+  "planned_chunks": [
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ]
+}
