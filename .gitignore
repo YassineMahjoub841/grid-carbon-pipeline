@@ -1,5 +1,11 @@
 .venv/
 __pycache__/
 *.pyc
+# dbt build artifacts and the local warehouse (rebuilt from data/raw at every run)
+transform/target/
+transform/logs/
+logs/
+data/*.duckdb
+data/*.duckdb.wal
 # in-flight downloads (a finished chunk is renamed to .parquet)
 *.part
