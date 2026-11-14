@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: eco2mix
+    description: >
+      RTE eCO2mix national data, as downloaded by ingest/ into data/raw/ (append-only Parquet,
+      one folder per extraction date). Read straight from the files, no load step.
+      hive_partitioning=false: otherwise DuckDB adds an `extracted_date` column from the folder name
+      (DATA_NOTES §10); we use the `_extracted_at` lineage column instead.
+    tables:
+      - name: national_tr
+        description: Real-time data since the last consolidation. Every daily snapshot is kept.
+        config:
+          meta:
+            external_location: "read_parquet('data/raw/eco2mix-national-tr/*/*.parquet', union_by_name=true, hive_partitioning=false)"
+          loaded_at_field: _extracted_at
+          freshness:
+            # The daily job pulls tr every day, so a stale snapshot means the job is broken.
+            warn_after: {count: 30, period: hour}
+            error_after: {count: 72, period: hour}
+
+      - name: national_cons_def
+        description: Consolidated + definitive data, 2012 onwards (backfill + incremental pulls).
+        config:
+          meta:
+            external_location: "read_parquet('data/raw/eco2mix-national-cons-def/*/*.parquet', union_by_name=true, hive_partitioning=false)"
+          # cons-def is only downloaded when it changes (DECISIONS D8), so _extracted_at can legitimately
+          # be old. What matters is how recent the data itself is: RTE consolidates ~1-2 months after
+          # month end, so the latest consolidated slot is normally 1-3 months old.
+          loaded_at_field: date_heure
+          freshness:
+            warn_after: {count: 100, period: day}
+            error_after: {count: 150, period: day}

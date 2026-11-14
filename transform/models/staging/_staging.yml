@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_eco2mix__consolidated
+    description: >
+      cons-def rows, typed and renamed to English, actual 30-min values only, DST phantom rows removed.
+      All extractions kept (backfill + incremental pulls).
+    columns:
+      - name: interval_start_utc
+        data_tests: [not_null]
+      - name: data_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['consolidated', 'definitive']
+
+  - name: stg_eco2mix__realtime
+    description: >
+      tr rows, typed and renamed, averaged from 15-min to 30-min. Only half hours with both
+      quarter-hours published. All daily snapshots kept.
+    columns:
+      - name: interval_start_utc
+        data_tests: [not_null]
+      - name: data_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['real_time']

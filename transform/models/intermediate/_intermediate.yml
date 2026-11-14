@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: int_eco2mix__slot_versions
+    description: Every downloaded version of every 30-min slot (both datasets, all extractions).
+    columns:
+      - name: version_key
+        data_tests: [unique, not_null]
+
+  - name: int_eco2mix__national
+    description: >
+      One row per 30-min slot: the best version (definitive > consolidated > real-time, then latest
+      extraction), with Europe/Paris local date and time added.
+    columns:
+      - name: interval_start_utc
+        data_tests: [unique, not_null]

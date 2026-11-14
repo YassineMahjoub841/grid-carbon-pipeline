@@ -1,0 +1,12 @@
+grid_carbon:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # Relative to the repo root (where dbt is run from). Tests point it at a temp file.
+      path: "{{ env_var('DUCKDB_PATH', 'data/warehouse.duckdb') }}"
+      threads: 4
+      settings:
+        # Without this, timestamptz -> date/hour conversions follow the machine's zone
+        # (Paris on a laptop, UTC on GitHub Actions) and the marts would differ. See DATA_NOTES §5.
+        TimeZone: UTC

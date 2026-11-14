@@ -1,0 +1,17 @@
+version: 2
+
+seeds:
+  - name: energy_sources
+    description: >
+      The 8 top-level production sources of eCO2mix and how we classify them. Pumped storage and
+      batteries are deliberately not sources: pumped-storage generation is already inside hydro,
+      pumping is a load (DECISIONS D13). Bioenergy is renewable but not counted as low-carbon,
+      because it burns biomass, biogas and waste.
+    columns:
+      - name: energy_source_key
+        data_tests: [unique, not_null]
+
+  - name: known_data_gaps
+    description: >
+      Slots RTE never published actuals for, outside the expected DST hour. The gap test allows
+      exactly these. Add a row only after checking the gap is upstream, not ours.

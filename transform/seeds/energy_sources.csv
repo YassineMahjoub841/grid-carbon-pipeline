@@ -1,0 +1,9 @@
+energy_source_key,energy_source_name,is_renewable,is_low_carbon,is_dispatchable,sort_order
+nuclear,Nuclear,false,true,true,1
+hydro,Hydro,true,true,true,2
+wind,Wind,true,true,false,3
+solar,Solar,true,true,false,4
+bioenergy,Bioenergy,true,false,true,5
+gas,Gas,false,false,true,6
+coal,Coal,false,false,true,7
+oil,Oil,false,false,true,8

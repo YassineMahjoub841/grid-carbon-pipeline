@@ -1,0 +1,47 @@
+name: grid_carbon
+version: "1.0.0"
+profile: grid_carbon
+
+# Run every dbt command from the repo root:
+#   uv run dbt build --project-dir transform --profiles-dir transform
+# Raw file paths in models/sources.yml are relative to the repo root.
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "logs"]
+
+vars:
+  # dim_date covers a fixed range, so its content never depends on when the pipeline runs.
+  dim_date_start: "2012-01-01"
+  dim_date_end: "2030-12-31"
+  # "When is it cleanest *today*" uses the post-crisis grid only (see docs/DECISIONS.md D15).
+  analysis_start_date: "2023-01-01"
+
+models:
+  grid_carbon:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: table
+    core:
+      +materialized: table
+    marts:
+      +materialized: table
+
+seeds:
+  grid_carbon:
+    energy_sources:
+      +column_types:
+        energy_source_key: varchar
+        energy_source_name: varchar
+        is_renewable: boolean
+        is_low_carbon: boolean
+        is_dispatchable: boolean
+        sort_order: integer
+    known_data_gaps:
+      +column_types:
+        missing_interval_start_utc: timestamptz
+        reason: varchar

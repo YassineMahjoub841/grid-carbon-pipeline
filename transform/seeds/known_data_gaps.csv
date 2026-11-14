@@ -1,0 +1,2 @@
+missing_interval_start_utc,reason
+2025-12-31T23:00:00Z,"cons-def publishes null actuals for 2026-01-01 00:00 local, the first consolidated slot after the definitive 2025 data (DATA_NOTES §4)"
