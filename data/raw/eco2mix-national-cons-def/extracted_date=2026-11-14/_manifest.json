@@ -1,0 +1,46 @@
+{
+  "dataset": "eco2mix-national-cons-def",
+  "file": "cons_def_recent.parquet",
+  "where": "date_heure >= date'2025-01-01T00:00:00Z'",
+  "rows": 58364,
+  "extracted_at": "2026-11-14T19:49:40.901173+00:00",
+  "sha256": "74cefbb36cfe083797cd3d93a2534ca5e91b9334eb44a427031e3b4e403dc06e",
+  "fingerprint": [
+    {
+      "nature": "Données consolidées",
+      "n": 23328,
+      "first_utc": "2025-12-31T23:00:00+00:00",
+      "last_utc": "2026-08-31T21:45:00+00:00",
+      "sum_consommation": 590937621,
+      "sum_taux_co2": 203311,
+      "sum_ech_physiques": -133743280,
+      "sum_pompage": -11259377,
+      "sum_nucleaire": 491819179,
+      "sum_eolien": 64539769,
+      "sum_solaire": 59905162,
+      "sum_hydraulique": 81876288,
+      "sum_gaz": 22568791,
+      "sum_charbon": 722561,
+      "sum_fioul": 1127910,
+      "sum_bioenergies": 14226528
+    },
+    {
+      "nature": "Données définitives",
+      "n": 35036,
+      "first_utc": "2025-01-01T00:00:00+00:00",
+      "last_utc": "2025-12-31T22:45:00+00:00",
+      "sum_consommation": 887628850,
+      "sum_taux_co2": 303445,
+      "sum_ech_physiques": -186296580,
+      "sum_pompage": -16266015,
+      "sum_nucleaire": 745967298,
+      "sum_eolien": 99221057,
+      "sum_solaire": 65014706,
+      "sum_hydraulique": 123861795,
+      "sum_gaz": 32772983,
+      "sum_charbon": 1339926,
+      "sum_fioul": 1620877,
+      "sum_bioenergies": 21753648
+    }
+  ]
+}
