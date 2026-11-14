@@ -245,6 +245,12 @@ Anomalies found, none blocking:
   *Hypothesis:* battery charging, which grows from 2021 and has no column in cons-def. Not verified.
   The worst 2026 row is off by 1.2%, so a balance test needs **~2% tolerance** (0 rows exceed 2%), not 1%.
 
+**DuckDB adds a column by itself:** `read_parquet` on a path like `.../extracted_date=2026-11-14/x.parquet`
+auto-detects Hive partitioning and adds a text column `extracted_date`. Comparing two pulls by position
+made every row look different until this showed up. Excluding that column, the 2026-11-14 incremental
+pull of 2025-01-01 → 2026-08-31 is **identical** to the 2026-11-12 backfill (58,364 rows, 0 differences).
+Staging should either use `extracted_date` deliberately or pass `hive_partitioning=false`.
+
 ## 11. Open questions for later phases (not decided here)
 
 1. **Grain of `fct_grid_interval`:** history is 30-min, tr is 15-min. Options: 30-min grain
@@ -254,4 +260,5 @@ Anomalies found, none blocking:
 2. **"Pumped storage" as an energy source:** generation is a subset of `hydraulique`
    (`hydraulique_step_turbinage`); `pompage` is negative load. Unpivoting both would double count.
 3. **Batteries** exist only in tr. Add a `battery` source, or leave it out of the generation fact and document that.
-4. **Start capturing tr now.** Without saved tr snapshots, `mart_revisions` has nothing to compare.
+4. ~~Start capturing tr now.~~ Done: first snapshot 2026-11-14 (7,296 rows, 2026-09-01 → 2026-11-15 local),
+   taken before September was consolidated.
