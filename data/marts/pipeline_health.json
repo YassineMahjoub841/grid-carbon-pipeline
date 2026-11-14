@@ -1,0 +1,96 @@
+{
+  "generated_at_utc": "2026-11-14T20:45:22+00:00",
+  "run_url": null,
+  "dbt_build": {
+    "available": true,
+    "generated_at": "2026-11-14T20:45:14.284428Z",
+    "elapsed_seconds": 3.8,
+    "counts": {
+      "model:success": 13,
+      "seed:success": 2,
+      "test:pass": 51
+    },
+    "problems": []
+  },
+  "source_freshness": {
+    "available": true,
+    "sources": [
+      {
+        "source": "national_cons_def",
+        "status": "pass",
+        "max_loaded_at": "2026-08-31T21:45:00+00:00",
+        "age_hours": 1799.0
+      },
+      {
+        "source": "national_tr",
+        "status": "pass",
+        "max_loaded_at": "2026-11-14T19:48:09.403923+00:00",
+        "age_hours": 1.0
+      }
+    ]
+  },
+  "data": {
+    "intervals_by_status": [
+      {
+        "data_status": "definitive",
+        "n_intervals": 245444,
+        "first_interval_utc": "2011-12-31T23:00:00+00:00",
+        "last_interval_utc": "2025-12-31T22:30:00+00:00"
+      },
+      {
+        "data_status": "consolidated",
+        "n_intervals": 11661,
+        "first_interval_utc": "2025-12-31T23:30:00+00:00",
+        "last_interval_utc": "2026-08-31T21:30:00+00:00"
+      },
+      {
+        "data_status": "real_time",
+        "n_intervals": 3593,
+        "first_interval_utc": "2026-08-31T22:00:00+00:00",
+        "last_interval_utc": "2026-11-14T19:00:00+00:00"
+      }
+    ],
+    "latest_extraction_by_dataset": [
+      {
+        "source_dataset": "eco2mix-national-cons-def",
+        "latest_extracted_at": "2026-11-14T19:49:40.901173+00:00",
+        "n_extractions": 16
+      },
+      {
+        "source_dataset": "eco2mix-national-tr",
+        "latest_extracted_at": "2026-11-14T19:48:09.403923+00:00",
+        "n_extractions": 1
+      }
+    ],
+    "row_counts": [
+      {
+        "table_name": "int_eco2mix__slot_versions",
+        "n": 289875
+      },
+      {
+        "table_name": "fct_grid_interval",
+        "n": 260698
+      },
+      {
+        "table_name": "fct_generation_interval",
+        "n": 2085584
+      },
+      {
+        "table_name": "mart_carbon_by_hour",
+        "n": 576
+      },
+      {
+        "table_name": "mart_best_window",
+        "n": 384
+      },
+      {
+        "table_name": "mart_monthly_mix_exchanges",
+        "n": 179
+      },
+      {
+        "table_name": "mart_revisions",
+        "n": 0
+      }
+    ]
+  }
+}
