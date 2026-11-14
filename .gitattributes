@@ -1,0 +1,5 @@
+# Shell scripts run on Linux (GitHub Actions): always LF, even when edited on Windows.
+*.sh text eol=lf
+# Data files are binary: never touch their line endings.
+*.parquet binary
+*.duckdb binary

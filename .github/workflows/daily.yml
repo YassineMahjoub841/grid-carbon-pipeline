@@ -1,0 +1,73 @@
+name: daily-pipeline
+
+on:
+  schedule:
+    # 12:17 UTC = 13:17 Paris in winter, 14:17 in summer: the two cleanest hours of the day according
+    # to this pipeline's own mart_carbon_by_hour (2023+, ~18.3 g/kWh). GitHub cron is UTC and ignores DST.
+    # :17 rather than :00 because scheduled runs queue up at the top of the hour.
+    - cron: "17 12 * * *"
+  workflow_dispatch: {}     # "Run workflow" button, for manual reruns
+
+permissions:
+  contents: write           # the job commits data back to the repo
+
+concurrency:
+  group: daily-pipeline
+  cancel-in-progress: false # never kill a run in the middle of a commit
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.5"
+          enable-cache: true
+
+      - name: Install Python and dependencies (exact versions from uv.lock)
+        run: uv sync --locked
+
+      - name: Git identity for data commits
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Ingest today's data
+        run: uv run python -m ingest.incremental
+
+      # Raw data is committed before dbt runs: a failing data test must never cost us a day's
+      # real-time snapshot (it can't be downloaded again later). `!cancelled()` also keeps what one
+      # dataset downloaded when the other failed.
+      - name: Commit raw data
+        if: ${{ !cancelled() }}
+        run: |
+          bash scripts/commit_and_push.sh "data: raw extraction $(date -u +%F)" data/raw
+
+      - name: Build and test (dbt)
+        run: uv run dbt build --project-dir transform --profiles-dir transform
+
+      - name: Source freshness
+        run: uv run dbt source freshness --project-dir transform --profiles-dir transform
+
+      # Only reached if every test passed: the dashboard never sees marts built from bad data.
+      - name: Export marts
+        run: uv run python -m publish.export_marts
+
+      - name: Commit marts
+        run: |
+          bash scripts/commit_and_push.sh "data: refresh marts $(date -u +%F)" data/marts
+
+      - name: Keep dbt logs and results (for debugging failed runs)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: dbt-target
+          path: |
+            transform/target/run_results.json
+            transform/target/sources.json
+            transform/logs/dbt.log
+          if-no-files-found: ignore
+          retention-days: 14

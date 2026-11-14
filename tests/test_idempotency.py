@@ -1,7 +1,7 @@
 """Running the pipeline twice on the same raw data must produce identical marts (CLAUDE.md).
 
 Builds the whole dbt project twice, into two separate DuckDB files, from the committed data/raw,
-and compares every mart row by row. Together with test_ingest.py (a second ingestion on the same
+compares every mart row by row, then checks the exported Parquet files are byte-identical. Together with test_ingest.py (a second ingestion on the same
 day writes nothing), this covers "running the pipeline twice on the same day gives the same marts".
 
 Slow (two full dbt builds, ~1 min). Run only this file with: uv run pytest tests/test_idempotency.py
@@ -13,6 +13,8 @@ import subprocess
 from pathlib import Path
 
 import duckdb
+
+from publish.export_marts import export_marts
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -44,3 +46,9 @@ def test_two_builds_give_identical_marts(tmp_path):
     assert set(first) == {"mart_carbon_by_hour", "mart_best_window", "mart_monthly_mix_exchanges", "mart_revisions"}
     for table in first:
         assert first[table] == second[table], f"{table} differs between two builds on the same data"
+
+    # The files the dashboard reads must be byte-identical too, or git would see a "change" every day.
+    files_a = export_marts(tmp_path / "first.duckdb", tmp_path / "export_a")
+    files_b = export_marts(tmp_path / "second.duckdb", tmp_path / "export_b")
+    for a, b in zip(files_a, files_b):
+        assert a.read_bytes() == b.read_bytes(), f"{a.name} is not byte-identical across builds"
