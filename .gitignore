@@ -4,6 +4,7 @@ __pycache__/
 # dbt build artifacts and the local warehouse (rebuilt from data/raw at every run)
 transform/target/
 transform/logs/
+transform/.user.yml
 logs/
 data/*.duckdb
 data/*.duckdb.wal
