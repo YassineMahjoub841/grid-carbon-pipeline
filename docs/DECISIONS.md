@@ -166,3 +166,48 @@ One entry per non-obvious choice: decision, alternatives, why. Evidence lives in
   hour plus the slots listed in the `known_data_gaps` seed.
 - Both tests were checked against deliberately broken code (phantom rows kept, known gap removed):
   they fail as they should.
+
+## D21: The daily job runs at 12:17 UTC, chosen by the pipeline's own results
+- `mart_carbon_by_hour` (2023+) ranks 13:00 Paris as the cleanest hour of the year (18.3 g/kWh), 14:00 second.
+  GitHub cron is UTC and ignores DST: 12:17 UTC = 13:17 in winter, 14:17 in summer, both in the top two.
+- `:17`, not `:00`: GitHub delays scheduled runs at the top of the hour, when everyone's crons fire.
+- Honest caveat: the job's own energy use is negligible. The point is to show the answer being used.
+
+## D22: Two commits per run: raw first, marts only if every test passed
+- **Order:** ingest → commit `data/raw` → `dbt build` (models + tests) → freshness → export → commit `data/marts`.
+- **Why raw first:** a real-time snapshot can never be downloaded again later. If a data test fails
+  (e.g. a new real-time spike), the run goes red, but the snapshot is already saved.
+  The raw commit runs even if one dataset failed (`if: !cancelled()`), to keep what the other downloaded.
+- **Why marts last:** if any test fails, the export and its commit don't run. The dashboard keeps yesterday's
+  marts rather than showing numbers built from data that failed a check.
+- **Alternatives:** one commit at the end (a failed test loses the day's snapshot); commit everything
+  regardless (bad numbers reach the dashboard).
+
+## D23: Data commits are authored by `github-actions[bot]`
+- Automated commits are labelled as automation, not as Yassine, and not as Claude. Code commits stay Yassine's.
+- **Alternative:** a personal identity for the bot (misleading: it would look like hand-made daily commits).
+
+## D24: Exported marts are deterministic files; the dashboard reads only those
+- `publish/export_marts.py` writes each mart with `order by all` to Parquet, then renames it into place (atomic).
+  `tests/test_idempotency.py` checks that two independent builds export **byte-identical** files.
+  Without that, git would record a "change" every day even when nothing changed.
+- `pipeline_health.json` sits next to them: run time, run URL, dbt results, freshness, row counts.
+  It changes on every run by design: it's the run log for dashboard page 3.
+- `data/warehouse.duckdb` stays uncommitted. The dashboard doesn't need a 100 MB database, only ~40 KB of marts.
+
+## D25: CI is a separate workflow; versions are pinned
+- `ci.yml` runs `pytest` (unit tests + the two-build idempotency test) on every push and pull request. Pushes
+  made by `daily.yml` don't trigger it: GitHub never starts workflows from its own token's pushes, by
+  design (no infinite loops). `daily.yml` runs the dbt tests itself.
+- `uv sync --locked`: CI fails instead of silently installing versions different from `uv.lock`. The uv version
+  is pinned (0.12.5), and actions are pinned to major versions (`@v7`). Hardening for production: pin actions
+  to commit SHAs.
+
+## D26: What a failed or missed run looks like
+- **Failed step:** the run is red in the Actions tab (and GitHub emails the repo owner). dbt logs and results are
+  uploaded as a run artifact for 14 days. The dashboard shows the last good marts, and the run URL in
+  `pipeline_health.json` points at the last successful run.
+- **Missed days:** caught up on the next run (D10).
+- **GitHub disables scheduled workflows in public repos after 60 days without activity.** The daily data commits
+  are activity, so this only bites if the job stays broken for 2 months.
+- **Concurrency group:** a manual run and the scheduled run can never overlap and race on commits.
