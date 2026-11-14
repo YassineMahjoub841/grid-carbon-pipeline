@@ -95,3 +95,74 @@ One entry per non-obvious choice: decision, alternatives, why. Evidence lives in
   The backfill and the daily job both call `odre.save_export`.
 - **Why:** the guarantees in D3/D4 are written once, so the two scripts can't drift apart. Scripts run
   as modules (`python -m ingest.incremental`) so `from ingest import odre` works on Windows and Linux alike.
+
+## D12: 30-minute grain everywhere
+- **Decision:** facts are one row per 30-min interval. Real-time 15-min rows are averaged in pairs
+  (:00+:15, :30+:45). A half hour with only one quarter published yet is dropped until the next snapshot.
+- **Alternatives:** 15-min grain, with history filled only at :00/:30 (half the rows null for 14 years).
+- **Why:** the history (cons-def) only has values every 30 min (DATA_NOTES §4). One grain for the whole
+  period keeps every mart comparable. MW are average power over an interval, so the mean of two 15-min
+  values is the 30-min value.
+- **Assumption to check:** that a cons-def :00 value is the 30-min average, not a point reading.
+  `mart_revisions` will show a systematic bias if it isn't.
+
+## D13: 8 energy sources; pumped storage and batteries are not sources
+- **Decision:** `dim_energy_source` = nuclear, hydro, wind, solar, bioenergy, gas, coal, oil.
+- **Why:** pumped-storage *generation* is already inside `hydraulique`, and pumping (`pompage`) is a load.
+  Making either a separate source double-counts or mixes loads with production. Batteries exist only
+  in real-time data (Sept 2026+). They stay in `fct_grid_interval.battery_net_mw` for the energy balance.
+- **Flags:** bioenergy is renewable but *not* low-carbon (it burns biomass, biogas and waste).
+  Hydro counts as dispatchable (reservoirs); wind and solar don't.
+
+## D14: Off-peak = 22:00-06:00 local
+- A simplification of the French "heures creuses". Real windows vary by contract and area. It's only a label
+  in `dim_time_of_day`; no mart depends on it.
+
+## D15: "Best time" uses 2023 onwards, built from an average daily profile
+- **Period:** `analysis_start_date = 2023-01-01`. 2012-2022 includes coal-heavy years and the 2022 crisis, which
+  would describe a grid that no longer exists. It's a dbt var, so easy to change.
+- **Method:** average CO2 by season × local 30-min slot, then a job's window average is the average of its
+  slots. Starts are on the hour; windows past midnight wrap around within the same season profile.
+- **Alternative:** compute every real window on every day, then average. More exact across DST days and
+  season boundaries, but much heavier and harder to explain. With equal slot counts both give the same number.
+
+## D16: Energy-balance test instead of "sources ≈ total production"
+- **Why:** the dataset has no total-production column (DATA_NOTES §3). The physical identity
+  consumption ≈ production + pumping + net imports (+ batteries) does exist.
+- **Tolerance:** 2% for consolidated/definitive data (worst seen 1.5%) and 8% for real-time (rare spikes
+  up to 5.1% in Sept 2026; p99 is 0.18%). A pipeline bug, such as a missing source or a flipped sign, shows
+  up as tens of percent.
+
+## D17: Marts are deterministic to the last bit
+- **Found by:** `tests/test_idempotency.py`. Two builds on the same data differed at the 15th digit.
+- **Cause:** float addition isn't associative, and DuckDB aggregates in parallel threads, so the
+  summation order varies between runs.
+- **Fix:** where we average arbitrary doubles (`mart_best_window`, `mart_revisions`), the aggregate gets an
+  explicit order: `avg(x order by ...)`. All other sums are over integers or half-integers
+  (averages of two integers), which doubles add exactly in any order.
+- **Alternatives:** rounding (a value near a rounding boundary can still flip); `threads: 1` (works in
+  practice but isn't a documented guarantee, and is slower).
+
+## D18: Model layout differs slightly from the spec
+- **Spec:** one staging model `stg_eco2mix__national` that unions and dedups.
+- **Built:** `stg_eco2mix__consolidated` + `stg_eco2mix__realtime` (one per source: typing, renaming,
+  DST phantom removal, 15→30 min), then `int_eco2mix__slot_versions` (every version of every slot) and
+  `int_eco2mix__national` (the dedup).
+- **Why:** staging stays 1:1 with sources (the dbt convention). The all-versions table is needed twice:
+  once to pick the best version, once by `mart_revisions` to compare versions.
+
+## D19: dbt reads the raw Parquet files directly; the warehouse is disposable
+- **Decision:** sources are `read_parquet(...)` over `data/raw/` (dbt-duckdb `external_location`), with
+  `hive_partitioning=false` (DATA_NOTES §10). `data/warehouse.duckdb` is gitignored and fully rebuilt by
+  `dbt build`; the committed raw files are the source of truth.
+- **Why:** no load step to maintain; a full rebuild takes ~10 s at this size. At 100× volume this becomes
+  incremental models and a persistent warehouse.
+- **DuckDB session time zone is pinned to UTC** in `transform/profiles.yml`, so local and CI builds match.
+
+## D20: DST test asserts what correct handling of *this* data looks like
+- The spec says "DST days have 23 or 25 hours". In this data the spring day has 23 hours (46 slots), but
+  the autumn day has 24 published hours, not 25: RTE publishes the repeated hour once (DATA_NOTES §6).
+  `assert_slots_per_local_day` expects 46 / 48. `assert_no_unexpected_gaps` allows exactly that missing
+  hour plus the slots listed in the `known_data_gaps` seed.
+- Both tests were checked against deliberately broken code (phantom rows kept, known gap removed):
+  they fail as they should.
