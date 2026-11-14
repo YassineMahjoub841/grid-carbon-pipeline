@@ -1,0 +1,97 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: Local (Europe/Paris) calendar dates, 2012-2030.
+    columns:
+      - name: date_key
+        data_tests: [unique, not_null]
+
+  - name: dim_time_of_day
+    description: The 48 local 30-minute slots of a day, with a simplified off-peak flag (22:00-06:00).
+    columns:
+      - name: time_of_day_key
+        data_tests: [unique, not_null]
+
+  - name: dim_energy_source
+    description: The 8 production sources and their renewable / low-carbon / dispatchable flags.
+    columns:
+      - name: energy_source_key
+        data_tests: [unique, not_null]
+
+  - name: fct_grid_interval
+    description: One row per 30-min interval. Consumption, CO2 intensity, total production, net imports.
+    columns:
+      - name: interval_start_utc
+        data_tests: [unique, not_null]
+      - name: date_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: time_of_day_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_time_of_day')
+                field: time_of_day_key
+      - name: consumption_mw
+        data_tests: [not_null]
+      - name: co2_intensity_g_per_kwh
+        data_tests:
+          - not_null
+          - value_between:
+              arguments:
+                min_value: 0
+                max_value: 300
+      - name: data_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['real_time', 'consolidated', 'definitive']
+
+  - name: fct_generation_interval
+    description: One row per 30-min interval × energy source. MW generated.
+    columns:
+      - name: generation_interval_key
+        data_tests: [unique, not_null]
+      - name: interval_start_utc
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_grid_interval')
+                field: interval_start_utc
+      - name: energy_source_key
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['nuclear', 'hydro', 'wind', 'solar', 'bioenergy', 'gas', 'coal', 'oil']
+          - relationships:
+              arguments:
+                to: ref('dim_energy_source')
+                field: energy_source_key
+      - name: date_key
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: generation_mw
+        data_tests:
+          - not_null
+          # Small negatives are real: idle plants drawing auxiliary power (DATA_NOTES §10).
+          - value_between:
+              arguments:
+                min_value: -200
+                max_value: 70000
+      - name: data_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['real_time', 'consolidated', 'definitive']

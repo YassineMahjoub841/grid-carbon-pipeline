@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: mart_carbon_by_hour
+    description: Average, p10 and p90 CO2 intensity by local hour × month × weekday/weekend, 2023 onwards.
+    columns:
+      - name: local_hour
+        data_tests:
+          - not_null
+          - value_between:
+              arguments: {min_value: 0, max_value: 23}
+      - name: avg_co2_g_per_kwh
+        data_tests: [not_null]
+
+  - name: mart_best_window
+    description: >
+      For 1/2/4/8-hour jobs and each season, the average CO2 for every start hour, ranked.
+      `is_best` marks the cleanest start; `pct_cleaner_than_worst` compares with the dirtiest start.
+    data_tests:
+      - assert_one_best_per_group
+    columns:
+      - name: duration_hours
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 4, 8]
+      - name: season
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['winter', 'spring', 'summer', 'autumn']
+
+  - name: mart_monthly_mix_exchanges
+    description: Monthly energy by source, consumption, production and net imports (TWh), since 2012.
+    columns:
+      - name: month_start
+        data_tests: [unique, not_null]
+
+  - name: mart_revisions
+    description: >
+      Revision size by month × metric × comparison (real_time -> consolidated, etc.). Empty until RTE
+      consolidates a month that we captured in real time (first snapshot 2026-11-14).
+    columns:
+      - name: from_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['real_time', 'consolidated']
+      - name: to_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['consolidated', 'definitive']
