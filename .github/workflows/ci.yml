@@ -24,8 +24,9 @@ jobs:
           version: "0.12.5"
           enable-cache: true
 
+      # --group dashboard: the dashboard tests need Streamlit (the daily job doesn't install it).
       - name: Install Python and dependencies (exact versions from uv.lock)
-        run: uv sync --locked
+        run: uv sync --locked --group dashboard
 
       - name: Tests
         run: uv run pytest -v

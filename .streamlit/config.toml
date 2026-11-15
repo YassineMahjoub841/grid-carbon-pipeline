@@ -1,0 +1,5 @@
+# Streamlit reads this from the directory it's started in (the repo root, locally and on Community Cloud).
+# No [theme] section on purpose: setting any theme option pins a custom light theme, while the charts
+# (dashboard/style.py) pick light or dark colours from the viewer's setting. They must agree.
+[browser]
+gatherUsageStats = false
