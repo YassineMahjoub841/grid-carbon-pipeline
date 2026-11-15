@@ -1,6 +1,6 @@
 -- Grain: one row per 30-minute interval (interval_start_utc): the best available version.
 --
--- Dedup rule (CLAUDE.md "Incremental strategy"): definitive > consolidated > real-time, then the
+-- Dedup rule (project brief, "Incremental strategy"): definitive > consolidated > real-time, then the
 -- latest extraction. Rerunning on the same raw files always picks the same row: the ordering is total
 -- because (data_status, extracted_at) identifies one extraction of one slot.
 -- Also adds the Europe/Paris local time the core models join on.

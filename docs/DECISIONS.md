@@ -184,7 +184,7 @@ One entry per non-obvious choice: decision, alternatives, why. Evidence lives in
   regardless (bad numbers reach the dashboard).
 
 ## D23: Data commits are authored by `github-actions[bot]`
-- Automated commits are labelled as automation, not as Yassine, and not as Claude. Code commits stay Yassine's.
+- Automated commits are labelled as automation, not as Yassine. Code commits stay Yassine's.
 - **Alternative:** a personal identity for the bot (misleading: it would look like hand-made daily commits).
 
 ## D24: Exported marts are deterministic files; the dashboard reads only those

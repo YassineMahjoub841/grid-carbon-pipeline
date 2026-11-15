@@ -1,4 +1,4 @@
-"""Running the pipeline twice on the same raw data must produce identical marts (CLAUDE.md).
+"""Running the pipeline twice on the same raw data must produce identical marts (a project requirement).
 
 Builds the whole dbt project twice, into two separate DuckDB files, from the committed data/raw,
 compares every mart row by row, then checks the exported Parquet files are byte-identical. Together with test_ingest.py (a second ingestion on the same

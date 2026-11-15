@@ -6,7 +6,7 @@ Evidence comes from real calls: dataset metadata (`/`), aggregations on `/record
 (`select=…&group_by=…`), and two Parquet exports (cons-def 2025, all of tr) analysed in DuckDB.
 Numbers below are what the API returned that day and will drift as data is published.
 
-## Verdict on each "known fact / gotcha" in CLAUDE.md
+## Verdict on each "known fact / gotcha" in the project brief
 
 | # | Claim in the spec | Verdict |
 |---|---|---|
