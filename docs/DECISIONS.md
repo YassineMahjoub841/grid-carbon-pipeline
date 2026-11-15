@@ -211,3 +211,40 @@ One entry per non-obvious choice: decision, alternatives, why. Evidence lives in
 - **GitHub disables scheduled workflows in public repos after 60 days without activity.** The daily data commits
   are activity, so this only bites if the job stays broken for 2 months.
 - **Concurrency group:** a manual run and the scheduled run can never overlap and race on commits.
+
+## D27: Dashboard = Streamlit + Plotly, reading only the committed marts
+- **Charts: Plotly** (the spec says pick one of Plotly or Altair). It gives hover tooltips on every chart for
+  free and handles the two-panel chart on page 2 (`make_subplots` with a shared time axis).
+- **Data:** the app reads `data/marts/*.parquet` and `pipeline_health.json` with pandas, never the warehouse
+  (D24). Loads are cached with the file's modification time in the cache key, so a new daily commit is
+  picked up without a restart.
+- **Logic lives in dbt, not in the app.** The app only re-aggregates in two places, both exact:
+  "all days" on the heatmap is the weekday and weekend averages weighted by interval count, and the yearly
+  CO2 on page 2 is weighted by production, the same way the mart weights its months.
+- **Every number in the text is computed from the marts** (2022 drop vs 2019, the only net-import year,
+  the lowest month), so it stays correct as data arrives. The one external claim (why reactors were
+  offline in 2022) is labelled as context from public reporting.
+
+## D28: Dashboard dependencies are a separate uv group
+- `streamlit` and `plotly` live in `[dependency-groups] dashboard`. The daily job (`uv sync --locked`)
+  doesn't install them; CI does (`--group dashboard`) because the dashboard tests need them.
+- **Community Cloud** installs `dashboard/requirements.txt` (it looks next to the entry script first),
+  generated from `uv.lock` by `uv export --only-group dashboard ...`. `tests/test_dashboard.py` fails if
+  its pins drift from `uv.lock`. So the deployed app installs ~30 packages, not dbt and its dependencies.
+- **Alternative:** let Cloud install the whole project. Slower, and it would install the pipeline stack
+  to draw three pages.
+
+## D29: Colours have a job, and follow the viewer's light/dark setting
+- One highlight (best window = blue, worst = orange, everything else grey), one single-hue blue scale for
+  "how much CO2", and a two-sided blue/red pair for exports/imports. No dual y-axis: nuclear output and net
+  imports are two panels on one time axis.
+- No rainbow scale: it suggests categories where there's a continuous quantity.
+- `.streamlit/config.toml` sets **no** theme: any theme option pins Streamlit to a custom light theme,
+  while the charts read the viewer's setting (`st.context.theme`). Found by screenshotting in dark mode.
+
+## D30: The dashboard is tested headless
+- `tests/test_dashboard.py` runs every page with Streamlit's `AppTest` (no browser) and fails on any
+  exception; checks that page 1's answer matches `mart_best_window`; and runs the health page against a
+  synthetic non-empty `mart_revisions`, because the real one is still empty and that code path would
+  otherwise run for the first time in production. Found a real bug on the first run (timestamps with and
+  without fractional seconds broke date parsing).
