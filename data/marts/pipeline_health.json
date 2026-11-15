@@ -1,14 +1,12 @@
 {
-  "generated_at_utc": "2026-11-14T20:45:22+00:00",
+  "generated_at_utc": "2026-11-15T17:37:36+00:00",
   "run_url": null,
   "dbt_build": {
     "available": true,
-    "generated_at": "2026-11-14T20:45:14.284428Z",
-    "elapsed_seconds": 3.8,
+    "generated_at": "2026-11-15T16:11:52.085233Z",
+    "elapsed_seconds": 0.2,
     "counts": {
-      "model:success": 13,
-      "seed:success": 2,
-      "test:pass": 51
+      "sql_operation:success": 1
     },
     "problems": []
   },
@@ -45,9 +43,9 @@
       },
       {
         "data_status": "real_time",
-        "n_intervals": 3593,
+        "n_intervals": 3634,
         "first_interval_utc": "2026-08-31T22:00:00+00:00",
-        "last_interval_utc": "2026-11-14T19:00:00+00:00"
+        "last_interval_utc": "2026-11-15T15:30:00+00:00"
       }
     ],
     "latest_extraction_by_dataset": [
@@ -58,22 +56,22 @@
       },
       {
         "source_dataset": "eco2mix-national-tr",
-        "latest_extracted_at": "2026-11-14T19:48:09.403923+00:00",
-        "n_extractions": 1
+        "latest_extracted_at": "2026-11-15T16:05:29.981201+00:00",
+        "n_extractions": 2
       }
     ],
     "row_counts": [
       {
         "table_name": "int_eco2mix__slot_versions",
-        "n": 289875
+        "n": 293509
       },
       {
         "table_name": "fct_grid_interval",
-        "n": 260698
+        "n": 260739
       },
       {
         "table_name": "fct_generation_interval",
-        "n": 2085584
+        "n": 2085912
       },
       {
         "table_name": "mart_carbon_by_hour",

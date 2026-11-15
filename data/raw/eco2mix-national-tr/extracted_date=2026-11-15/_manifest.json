@@ -1,0 +1,8 @@
+{
+  "dataset": "eco2mix-national-tr",
+  "file": "tr.parquet",
+  "where": "",
+  "rows": 7392,
+  "extracted_at": "2026-11-15T16:05:29.981201+00:00",
+  "sha256": "89ce3330f68d31b54c9452d245c8c0c36cdd3e8272e452caab9c1ffce0e167e2"
+}
