@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-11-18T20:37:33+00:00",
-  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/44392883324",
+  "generated_at_utc": "2026-11-19T20:41:58+00:00",
+  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/44611243156",
   "dbt_build": {
     "available": true,
-    "generated_at": "2026-11-18T20:37:29.477584Z",
+    "generated_at": "2026-11-19T20:41:55.307206Z",
     "elapsed_seconds": 3.1,
     "counts": {
       "model:success": 13,
@@ -19,12 +19,12 @@
         "source": "national_cons_def",
         "status": "pass",
         "max_loaded_at": "2026-08-31T21:45:00+00:00",
-        "age_hours": 1894.9
+        "age_hours": 1918.9
       },
       {
         "source": "national_tr",
         "status": "pass",
-        "max_loaded_at": "2026-11-18T20:37:05.377063+00:00",
+        "max_loaded_at": "2026-11-19T20:41:42.029511+00:00",
         "age_hours": 0.0
       }
     ]
@@ -45,9 +45,9 @@
       },
       {
         "data_status": "real_time",
-        "n_intervals": 3786,
+        "n_intervals": 3835,
         "first_interval_utc": "2026-08-31T22:00:00+00:00",
-        "last_interval_utc": "2026-11-18T19:30:00+00:00"
+        "last_interval_utc": "2026-11-19T20:00:00+00:00"
       }
     ],
     "latest_extraction_by_dataset": [
@@ -58,22 +58,22 @@
       },
       {
         "source_dataset": "eco2mix-national-tr",
-        "latest_extracted_at": "2026-11-18T20:37:05.377063+00:00",
-        "n_extractions": 5
+        "latest_extracted_at": "2026-11-19T20:41:42.029511+00:00",
+        "n_extractions": 6
       }
     ],
     "row_counts": [
       {
         "table_name": "int_eco2mix__slot_versions",
-        "n": 304728
+        "n": 308563
       },
       {
         "table_name": "fct_grid_interval",
-        "n": 260891
+        "n": 260940
       },
       {
         "table_name": "fct_generation_interval",
-        "n": 2087128
+        "n": 2087520
       },
       {
         "table_name": "mart_carbon_by_hour",
