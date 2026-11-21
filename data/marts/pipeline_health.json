@@ -1,10 +1,10 @@
 {
-  "generated_at_utc": "2026-11-20T20:26:19+00:00",
-  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/44811291021",
+  "generated_at_utc": "2026-11-21T19:21:23+00:00",
+  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/44940457028",
   "dbt_build": {
     "available": true,
-    "generated_at": "2026-11-20T20:26:16.110951Z",
-    "elapsed_seconds": 3.0,
+    "generated_at": "2026-11-21T19:21:19.678579Z",
+    "elapsed_seconds": 2.4,
     "counts": {
       "model:success": 13,
       "seed:success": 2,
@@ -19,12 +19,12 @@
         "source": "national_cons_def",
         "status": "pass",
         "max_loaded_at": "2026-08-31T21:45:00+00:00",
-        "age_hours": 1942.7
+        "age_hours": 1965.6
       },
       {
         "source": "national_tr",
         "status": "pass",
-        "max_loaded_at": "2026-11-20T20:26:02.564255+00:00",
+        "max_loaded_at": "2026-11-21T19:21:08.542248+00:00",
         "age_hours": 0.0
       }
     ]
@@ -45,9 +45,9 @@
       },
       {
         "data_status": "real_time",
-        "n_intervals": 3882,
+        "n_intervals": 3928,
         "first_interval_utc": "2026-08-31T22:00:00+00:00",
-        "last_interval_utc": "2026-11-20T19:30:00+00:00"
+        "last_interval_utc": "2026-11-21T18:30:00+00:00"
       }
     ],
     "latest_extraction_by_dataset": [
@@ -58,22 +58,22 @@
       },
       {
         "source_dataset": "eco2mix-national-tr",
-        "latest_extracted_at": "2026-11-20T20:26:02.564255+00:00",
-        "n_extractions": 7
+        "latest_extracted_at": "2026-11-21T19:21:08.542248+00:00",
+        "n_extractions": 8
       }
     ],
     "row_counts": [
       {
         "table_name": "int_eco2mix__slot_versions",
-        "n": 312445
+        "n": 316373
       },
       {
         "table_name": "fct_grid_interval",
-        "n": 260987
+        "n": 261033
       },
       {
         "table_name": "fct_generation_interval",
-        "n": 2087896
+        "n": 2088264
       },
       {
         "table_name": "mart_carbon_by_hour",
