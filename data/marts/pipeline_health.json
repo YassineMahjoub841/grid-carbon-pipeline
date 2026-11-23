@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-11-22T19:45:26+00:00",
-  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/45062502469",
+  "generated_at_utc": "2026-11-23T23:57:29+00:00",
+  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/45293101975",
   "dbt_build": {
     "available": true,
-    "generated_at": "2026-11-22T19:45:23.265046Z",
+    "generated_at": "2026-11-23T23:57:26.039533Z",
     "elapsed_seconds": 2.7,
     "counts": {
       "model:success": 13,
@@ -19,12 +19,12 @@
         "source": "national_cons_def",
         "status": "pass",
         "max_loaded_at": "2026-08-31T21:45:00+00:00",
-        "age_hours": 1990.0
+        "age_hours": 2018.2
       },
       {
         "source": "national_tr",
         "status": "pass",
-        "max_loaded_at": "2026-11-22T19:45:11.778624+00:00",
+        "max_loaded_at": "2026-11-23T23:57:13.895076+00:00",
         "age_hours": 0.0
       }
     ]
@@ -45,9 +45,9 @@
       },
       {
         "data_status": "real_time",
-        "n_intervals": 3977,
+        "n_intervals": 4033,
         "first_interval_utc": "2026-08-31T22:00:00+00:00",
-        "last_interval_utc": "2026-11-22T19:00:00+00:00"
+        "last_interval_utc": "2026-11-23T23:00:00+00:00"
       }
     ],
     "latest_extraction_by_dataset": [
@@ -58,22 +58,22 @@
       },
       {
         "source_dataset": "eco2mix-national-tr",
-        "latest_extracted_at": "2026-11-22T19:45:11.778624+00:00",
-        "n_extractions": 9
+        "latest_extracted_at": "2026-11-23T23:57:13.895076+00:00",
+        "n_extractions": 10
       }
     ],
     "row_counts": [
       {
         "table_name": "int_eco2mix__slot_versions",
-        "n": 320350
+        "n": 324383
       },
       {
         "table_name": "fct_grid_interval",
-        "n": 261082
+        "n": 261138
       },
       {
         "table_name": "fct_generation_interval",
-        "n": 2088656
+        "n": 2089104
       },
       {
         "table_name": "mart_carbon_by_hour",
