@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-11-26T21:38:30+00:00",
-  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/45899480232",
+  "generated_at_utc": "2026-11-27T21:22:16+00:00",
+  "run_url": "https://github.com/YassineMahjoub841/grid-carbon-pipeline/actions/runs/46069793976",
   "dbt_build": {
     "available": true,
-    "generated_at": "2026-11-26T21:38:27.300247Z",
+    "generated_at": "2026-11-27T21:22:12.399126Z",
     "elapsed_seconds": 2.9,
     "counts": {
       "model:success": 13,
@@ -19,12 +19,12 @@
         "source": "national_cons_def",
         "status": "pass",
         "max_loaded_at": "2026-08-31T21:45:00+00:00",
-        "age_hours": 2087.9
+        "age_hours": 2111.6
       },
       {
         "source": "national_tr",
         "status": "pass",
-        "max_loaded_at": "2026-11-26T21:38:14.482103+00:00",
+        "max_loaded_at": "2026-11-27T21:21:59.548125+00:00",
         "age_hours": 0.0
       }
     ]
@@ -45,9 +45,9 @@
       },
       {
         "data_status": "real_time",
-        "n_intervals": 4173,
+        "n_intervals": 4220,
         "first_interval_utc": "2026-08-31T22:00:00+00:00",
-        "last_interval_utc": "2026-11-26T21:00:00+00:00"
+        "last_interval_utc": "2026-11-27T20:30:00+00:00"
       }
     ],
     "latest_extraction_by_dataset": [
@@ -58,22 +58,22 @@
       },
       {
         "source_dataset": "eco2mix-national-tr",
-        "latest_extracted_at": "2026-11-26T21:38:14.482103+00:00",
-        "n_extractions": 12
+        "latest_extracted_at": "2026-11-27T21:21:59.548125+00:00",
+        "n_extractions": 13
       }
     ],
     "row_counts": [
       {
         "table_name": "int_eco2mix__slot_versions",
-        "n": 332681
+        "n": 336901
       },
       {
         "table_name": "fct_grid_interval",
-        "n": 261278
+        "n": 261325
       },
       {
         "table_name": "fct_generation_interval",
-        "n": 2090224
+        "n": 2090600
       },
       {
         "table_name": "mart_carbon_by_hour",
